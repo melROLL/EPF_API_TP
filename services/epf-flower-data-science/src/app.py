@@ -3,7 +3,6 @@ from starlette.middleware.cors import CORSMiddleware
 from src.api.router import router
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from fastapi.openapi.models import APIBase
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.responses import HTMLResponse
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -28,7 +27,7 @@ def get_application() -> FastAPI:
 
     application.include_router(router)
 
-    # Redirect root endpoint to Swagger UI
+    #Redirect root endpoint to Swagger UI
     @application.get("/", include_in_schema=False)
     async def custom_swagger_ui_html():
         return HTMLResponse(get_swagger_ui_html(openapi_url="/openapi.json", title="Docs"))
