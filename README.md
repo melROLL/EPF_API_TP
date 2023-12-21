@@ -144,61 +144,73 @@ Before starting the exercise, download the contents of the main branch of the fo
 Don't forget to add me to the repo with the following email address: clement.letizia@epfedu.fr
 
 About the API workflow:
-- The router.py file contains references to the routers defined in the routers folder.
-- The routers file contains the declaration of all API routes by tags 
-- The Services folder must contain the functions that are called in the route declaration
 
-- **Step 1: Installing libraries:** Install the libraries in the requirements.txt
+    The router.py file contains references to the routers defined in the routers folder.
 
-- **Step 2: First launch:**  Execute the main.py file in the root folder and access it.
+    The routers file contains the declaration of all API routes by tags
 
-- **Step 3: Redirect root API:**  Redirect the root endpoint of your API to the automatic swagger documentation
+    The Services folder must contain the functions that are called in the route declaration
 
-- **Step 4: Access the swagger documentation:**  Access to the swagger built automatically by FastAPI
+    Step 1: Installing libraries: Install the libraries in the requirements.txt
 
-- **Step 5: First call to the API:**  Make an API request on the hello route using the swagger directly or a tool like insomnia or postman
+    Step 2: First launch: Execute the main.py file in the root folder and access it.
 
-- **Step 6: Access the dataset:**  Create a route in api/routes/data to download and save the contents of the following kaggle dataset in the src/data folder: https://www.kaggle.com/datasets/uciml/iris. If you're having too many problems, simply download the dataset from the kaggle website. documentation : https://www.geeksforgeeks.org/how-to-download-kaggle-datasets-into-jupyter-notebook/
+    Step 3: Redirect root API: Redirect the root endpoint of your API to the automatic swagger documentation
 
-- **Step 7: Loading the Iris Flower dataset:** Add an endpoint to load the iris dataset file as a dataframe and return it as a json.
+    Step 4: Access the swagger documentation: Access to the swagger built automatically by FastAPI
 
-- **Step 8: Processing the dataset:** Add an endpoint to be able to perform the necessary processing on the data before being able to train a model with it.
+    Step 5: First call to the API: Make an API request on the hello route using the swagger directly or a tool like insomnia or postman
 
-- **Step 9: Split in train and test:** Add an endpoint to split the iris dataset as train and test and send back a json with both
+    Step 6: Access the dataset: Create a route in api/routes/data to download and save the contents of the following kaggle dataset in the src/data folder: https://www.kaggle.com/datasets/uciml/iris. If you're having too many problems, simply download the dataset from the kaggle website. documentation : https://www.geeksforgeeks.org/how-to-download-kaggle-datasets-into-jupyter-notebook/
 
-- **Step 10: Parameters init:** Go to scikit learn and select any classification model to be used on the iris dataset (performance is of no interest to us in this course). Look at the parameters you need to use for this model and store them in the file src/config/model_parameters.json
+    Step 7: Loading the Iris Flower dataset: Add an endpoint to load the iris dataset file as a dataframe and return it as a json.
 
-- **Step 11: Training the classification model:** Add an endpoint to train a classification model with the processed dataset as input and saved this model in the folder src/models.
+    Step 8: Processing the dataset: Add an endpoint to be able to perform the necessary processing on the data before being able to train a model with it.
 
-- **Step 12: Prediction with Trained Model:** Add endpoint to make predictions with trained model and parameters. This endpoint have to send back the predictions as json.
+    Step 9: Split in train and test: Add an endpoint to split the iris dataset as train and test and send back a json with both
 
-- **Step 13: Create the Firestore collection:** Create the firestore collection "parameters" with the following parameters: "n_estimators", "criterion".
+    Step 10: Parameters init: Go to scikit learn and select any classification model to be used on the iris dataset (performance is of no interest to us in this course). Look at the parameters you need to use for this model and store them in the file src/config/model_parameters.json
 
-- **Step 14: Retrieve parameters from Firestore:** Add an endpoint to retrieve parameters from Firestore.
+    Step 11: Training the classification model: Add an endpoint to train a classification model with the processed dataset as input and saved this model in the folder src/models.
 
-- **Step 15: Update and add Firestore parameters:** Add endpoints to update or add parameters in Firestore.
+    Step 12: Prediction with Trained Model: Add endpoint to make predictions with trained model and parameters. This endpoint have to send back the predictions as json.
 
-The completion of this TP is relatively long and may overtake TP3 
+    Step 13: Create the Firestore collection: Create the firestore collection "parameters" with the following parameters: "n_estimators", "criterion". The name of the document with the parameters have to be : parameters.
 
-### Documentation link :
+    Step 14: Retrieve parameters from Firestore: Add an endpoint to retrieve parameters from Firestore.
 
-- FastApi: https://fastapi.tiangolo.com/
+    Step 15: Update and add Firestore parameters: Add endpoints to update or add parameters in Firestore.
+    (the rest was added later)
 
-- Google Cloud Firestore: https://cloud.google.com/python/docs/reference/firestore/latest/index.html
+    Step 16: Authentication: Implement authentication through Firestore authentication
 
-- Scikit-Learn: https://scikit-learn.org/stable/index.html
+    Step 17: User management: Extend authentication to include user registration, login and logout endpoints. Explore also user roles and permissions. Allow only admin users to access to the list of user
 
-- Pandas: https://pandas.pydata.org/docs/
+    Step 18: Protection against Denial of Service (DoS) attacks: Implement rate limiting by user
 
+    Step 19: API versioning: Add the information about the version of your API. (you are on version 1.0) Also add the prefix to your routes to indicate the version.
 
-### Pep-8 docstring example :
+    Step 20: Error Handling: Add a custom error responses for error 404 and provide meaningful error message.
 
-"""
-  Retrieve content of a json file
+    Step 21: API testing: Implement unit tests for your functions and enpoints
 
-  Args:
-      path (str): The path of the file
+    Step 22: CI/CD pipeline: Define a CI/CD pipeline on github using github Actions to launch your tests after every push
 
-  Returns:
-      JSON object: The json object with the parameters
-  """
+The completion of this TP is relatively long and may overtake TP3
+Documentation link :
+
+    FastApi: https://fastapi.tiangolo.com/
+
+    Google Cloud Firestore: https://cloud.google.com/python/docs/reference/firestore/latest/index.html
+
+    Scikit-Learn: https://scikit-learn.org/stable/index.html
+
+    Pandas: https://pandas.pydata.org/docs/
+
+Pep-8 docstring example :
+
+""" Retrieve content of a json file
+
+Args: path (str): The path of the file
+
+Returns: JSON object: The json object with the parameters """
