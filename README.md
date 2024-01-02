@@ -6,7 +6,7 @@
 
   - Flask : No
 
-  - FastAPI : Yes it is is the name
+  - FastAPI : Yes it is is the name  :white_check_mark:
 
   - All of the above : No
 
@@ -19,7 +19,7 @@ Why is it Fast API ? FastAPI is chosen for different reasons, it is fast and des
 
   - Flask outperforms Django and FastAPI.
 
-  - FastAPI is renowned for its increased speed and performance compared with Django and Flask. : Right Answer
+  - FastAPI is renowned for its increased speed and performance compared with Django and Flask. : Right Answer  :white_check_mark:
 
   - Django, Flask and FastAPI have equivalent performance.
 
@@ -32,7 +32,7 @@ FastAPI is known for its high performance. Django and Flask are excellent framew
 
   - A breakpoint in the code where the API can be interrupted.
 
-  - A specific URL to which a request can be sent to interact with the API. : Right Answer
+  - A specific URL to which a request can be sent to interact with the API. : Right Answer  :white_check_mark:
 
   - A unique identifier assigned to each incoming request.
 
@@ -42,7 +42,7 @@ In the context of REST APIs, an endpoint is a specific URL to which clients can 
 
 - **Question 4:** _What are the main HTTP verbs used to define REST API methods?_
 
-  - GET, POST, PUT, PATCH, DELETE : Right answer
+  - GET, POST, PUT, PATCH, DELETE : Right answer  :white_check_mark:
 
   - SEND, RECEIVE, UPDATE, REMOVE
 
@@ -61,7 +61,7 @@ The main HTTP verbs used to define REST API methods are GET, POST, PUT, PATCH, a
 
   - An external library used to speed up API development.
 
-  - Intermediate software that processes the request before it reaches the main application. : Right answer
+  - Intermediate software that processes the request before it reaches the main application. : Right answer  :white_check_mark:
 
   - A method for securing data stored in the database.
 
@@ -74,7 +74,7 @@ In the context of REST APIs, middleware refers to intermediate software componen
 
   - PyJSON
 
-  - json.dumps() and json.loads() : Right Answer 
+  - json.dumps() and json.loads() : Right Answer  :white_check_mark:
 
   - serializeJSON
 
@@ -86,7 +86,7 @@ In the context of REST APIs, the `json.dumps()` function is commonly used to ser
 
   - Create a new resource.
 
-  - Update an existing resource, or create one if it doesn't exist. : Right answer
+  - Update an existing resource, or create one if it doesn't exist. : Right answer  :white_check_mark:
 
   - Delete a resource.
 
@@ -96,7 +96,7 @@ In the context of REST APIs, the HTTP "PUT" method is typically used to update a
 
 - **Question 8:** In FastAPI, how do you define an endpoint to handle a POST request with JSON data?\*
 
-  - @app.post("/endpoint") : Right Answer
+  - @app.post("/endpoint") : Right Answer  :white_check_mark:
 
   - @app.get("/endpoint")
 
