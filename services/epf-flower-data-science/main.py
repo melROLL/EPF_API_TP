@@ -3,7 +3,11 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from google.cloud import firestore
 from firebase_admin import auth, credentials, initialize_app
+from fastapi_limiter import FastAPILimiter
+from fastapi_limiter.depends import RateLimiter
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
+
 
 # Initialize Firestore client
 db = firestore.Client()
@@ -14,7 +18,9 @@ db = firestore.Client()
 cred = credentials.Certificate("apiepf-firebase-adminsdk-axcvn-74308a4ed6.json")
 initialize_app(cred)
 # initialize_app(cred, {'projectId': 'apiepf',})  
+# initialize_app(cred, {'projectId': 'apiepf', 'databaseURL': 'https://apiepf.firebaseio.com'})
 
+# Create Firestore collection if it doesn't exist
 # Create Firestore collection if it doesn't exist
 parameters_collection = db.collection("parameters")
 if not parameters_collection.get():
@@ -28,7 +34,21 @@ if not parameters_collection.get():
 # Create Firestore collection for users
 users_collection = db.collection("users")
 
-app = FastAPI()
+# Configure FastAPI application without API version and prefix but it works
+# app = FastAPI()
+
+
+# Configure FastAPI application with API version and prefix
+app = FastAPI(
+    title="EPF_API",
+    description="API for EPF project this is the description made by Melvyn",
+    version="1.0",
+    openapi_url="/v1/openapi.json",  # Provide the correct version in the URL
+    docs_url="/v1/docs",  # Provide the correct version in the URL
+    redoc_url="/v1/redoc",  # Provide the correct version in the URL
+)
+
+
 
 # Firebase Authentication
 oauth2_scheme = OAuth2AuthorizationCodeBearer(tokenUrl="token")
@@ -47,16 +67,23 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         )
 
 
+# model for parameters response
 class Parameters(BaseModel):
     n_estimators: int
     criterion: str
 
 
-@app.get("/get-parameters", response_model=Parameters, dependencies=[Depends(get_current_user)])
+
+# Endpoint to retrieve parameters from Firestore with rate limiting and API versioning
+@app.get("/v1/get-parameters", response_model=Parameters, dependencies=[Depends(get_current_user), RateLimiter(times=5, minutes=1)])
 async def get_parameters():
     try:
-        # Retrieve parameters from Firestore
         parameters_document = parameters_collection.document("parameters").get().to_dict()
+        if not parameters_document:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Parameters not found",
+            )
         return parameters_document
 
     except Exception as e:
@@ -65,7 +92,16 @@ async def get_parameters():
             detail=f"Failed to retrieve parameters. Error: {str(e)}"
         )
 
+# Step 20: Custom error handler for 404 errors
+async def not_found_error_handler(request, exc):
+    return JSONResponse(
+        status_code=404,
+        content={"message": "Error 404 Resource not found"},
+    )
+    
 
+
+# Endpoint to update parameters in Firestore
 @app.put("/update-parameters", response_model=dict, dependencies=[Depends(get_current_user)])
 async def update_parameters(new_parameters: Parameters):
     try:
@@ -81,6 +117,7 @@ async def update_parameters(new_parameters: Parameters):
         )
 
 
+# Endpoint to add parameters to Firestore
 @app.post("/add-parameters", response_model=dict, dependencies=[Depends(get_current_user)])
 async def add_parameters(new_parameters: Parameters):
     try:
@@ -96,6 +133,7 @@ async def add_parameters(new_parameters: Parameters):
         )
 
 
+# models for user registration and login
 class UserRegistration(BaseModel):
     email: str
     password: str
@@ -106,6 +144,7 @@ class UserLogin(BaseModel):
     password: str
 
 
+# Endpoint to register a new user
 @app.post("/register", response_model=dict)
 async def register_user(user_data: UserRegistration):
     try:
@@ -125,12 +164,13 @@ async def register_user(user_data: UserRegistration):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"User registration failed: {str(e)}"
         )
+        
 
-
+# Endpoint to log in a user and return an authentication token
 @app.post("/login", response_model=dict)
 async def login_user(user_data: UserLogin):
     try:
-        # Sign in user
+        # Sign in user and get authentication token
         user = auth.sign_in_with_email_and_password(user_data.email, user_data.password)
 
         return {"message": "User logged in successfully", "token": user['idToken']}
@@ -141,12 +181,12 @@ async def login_user(user_data: UserLogin):
             detail=f"Login failed: {str(e)}"
         )
 
-
+# Endpoint to log out a user
 @app.post("/logout", response_model=dict, dependencies=[Depends(get_current_user)])
 async def logout_user():
     return {"message": "User logged out successfully"}
 
-
+# Endpoint to list users (accessible only to admin users)
 @app.get("/list-users", response_model=list, dependencies=[Depends(get_current_user)])
 async def list_users(current_user: dict = Depends(get_current_user)):
     # Check if the user is an admin
@@ -160,6 +200,11 @@ async def list_users(current_user: dict = Depends(get_current_user)):
             detail="Access denied. Only admin users can list users."
         )
 
+## DDOS Atack security with FastAPI Limiter
+# Configure rate limiting settings
+FastAPILimiter.init_app(app, redis_url="redis://localhost", enabled=True)
 
+
+# Run the FastAPI application
 if __name__ == "__main__":
     uvicorn.run("main:app", debug=True, reload=True, port=8080)
